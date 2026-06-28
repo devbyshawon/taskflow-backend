@@ -48,7 +48,7 @@ const login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials'});
         }
 
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcrypt.compare(password, user.password);
         
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials'});
@@ -72,7 +72,7 @@ const login = async (req, res) => {
 
 const getMe = async (req, res) => {
     try {
-        const userId = req.user.id
+        const userId = req.user.id;
         
         const user = await User.findById(userId).select('-password');
         
@@ -80,7 +80,7 @@ const getMe = async (req, res) => {
             return res.status(404).json({ message: 'User not found'});
         }
         
-        res.status(200).json(user)
+        res.status(200).json(user);
         
     } catch (error) {
         console.error(error);
