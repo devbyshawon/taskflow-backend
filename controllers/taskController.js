@@ -73,4 +73,116 @@ const getTask = async (req, res) => {
     }
 
 } 
-module.exports = { createTask, getTask };
+
+const updateTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found'});
+        }
+
+        const project = await Project.findById(task.project);
+
+        if (!project) {
+            return res.status(403).json({ message: 'Access denied'});
+        }
+
+        const member = project.members.find(item => {
+            return item.user.toString() === req.user.id;
+        })
+
+        if (!member) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        if (member.role === 'admin') {
+            const { title, description, status, assignedTo, dueDate } = req.body;
+
+            if (title) {
+                task.title = title;
+            }
+
+            if (description) {
+                task.description = description;
+            }
+
+            if (status) {
+                task.status = status;
+            }
+
+            if (assignedTo) {
+                task.assignedTo = assignedTo;
+            }
+
+            if (dueDate) {
+                task.dueDate = dueDate;
+            }
+
+        }
+
+        if (member.role === 'member') {
+            if (!task.assignedTo) {
+                return res.status(403).json({ message: 'You can only update tasks assigned to you' });
+            }
+
+            const assign = task.assignedTo.toString() === req.user.id;
+
+            if (!assign) {
+                return res.status(403).json({ message: 'You can only update tasks assigned to you'})
+            }
+
+            const { status } = req.body;
+
+            if (status) {
+                task.status = status;
+            }
+        }
+
+        await task.save();
+
+        res.status(200).json(task);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error'});
+    }
+}
+
+const deleteTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found'});
+        }
+
+        const project = await Project.findById(task.project);
+
+        if (!project) {
+            return res.status(403).json({ message: 'Access denied'});
+        }
+
+        const member = project.members.find(item => {
+            return item.user.toString() === req.user.id;
+        })
+
+        if (!member) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
+        if (member.role !== 'admin') {
+            return res.status(403).json({ message: 'Admin access required'});
+        }
+        
+        await task.deleteOne();
+
+        return res.status(200).json({ message: 'Task deleted'})
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error'});    
+    }
+}
+
+module.exports = { createTask, getTask, updateTask, deleteTask };

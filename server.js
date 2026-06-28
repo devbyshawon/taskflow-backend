@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRouter = require('./routes/authRoutes');
 const projectRouter = require('./routes/projectRoutes');
+const taskRouter = require('./routes/taskRoutes');
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cors());
 
 app.use('/api/auth', authRouter);
 app.use('/api/projects', projectRouter);
+app.use('/api/tasks', taskRouter);
 
 app.get('/', (req, res) => {
     res.send('Welcome to the Home Page!');
