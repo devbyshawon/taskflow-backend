@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Project = require('../models/Project');
 const User = require('../models/User');
 
@@ -35,15 +36,19 @@ const getMyProjects = async (req, res) => {
 }
 
 const getProjectById = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+    
     try {
-        const project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.id).populate('members.user', 'name email');
         
         if (!project) {
             return res.status(404).json({ message: 'Project not found'});
         }
 
         const found = project.members.find(item => {
-            return item.user.toString() === req.user.id;
+            return item.user._id.toString() === req.user.id;
         });
 
         if (!found) {

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Task = require('../models/Task');
 const Project = require('../models/Project');
 
@@ -48,6 +49,10 @@ const createTask = async (req, res) => {
 }
 
 const getTask = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
     try {
         const project = await Project.findById(req.params.id);
 
