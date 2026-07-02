@@ -162,8 +162,8 @@ const addMember = async (req, res) => {
         project.members.push({ user: userToAdd._id, role: 'member'});
 
         await project.save();
-
-        res.status(200).json(project);
+        const updatedProject = await Project.findById(project._id).populate('members.user', 'name email');
+        res.status(200).json(updatedProject);
 
     } catch (error) {
         console.error(error);
@@ -206,8 +206,8 @@ const removeMember = async (req, res) => {
         });
 
         await project.save();
-
-        res.status(200).json(project);
+        const updatedProject = await Project.findById(project._id).populate('members.user', 'name email');
+        res.status(200).json(updateProject);
 
     } catch (error) {
         console.error(error);
