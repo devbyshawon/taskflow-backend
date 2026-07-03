@@ -38,8 +38,8 @@ const createTask = async (req, res) => {
         const task = new Task({ title, description, project: req.params.id, assignedTo, dueDate });
 
         await task.save();
-
-        res.status(201).json(task);
+        const populatedTask = await Task.findById(task._id).populate('assignedTo', 'name email');
+        res.status(201).json(populatedTask);
 
     } catch (error) {
         console.error(error);
