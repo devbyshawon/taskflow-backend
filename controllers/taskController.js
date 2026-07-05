@@ -123,21 +123,23 @@ const updateTask = async (req, res) => {
             if (status) {
                 task.status = status;
             }
-
-            if (assignedTo) {
-                const assign = project.members.find(item => {
-                    return item.user.toString() === assignedTo;
-                });
-
-                if (!assign) {
-                    return res.status(400).json({ message: 'Assigned user is not a project member' });
+            if (assignedTo !== undefined) {
+                if (assignedTo === null) {
+                    task.assignedTo = undefined;
+                } else {
+                    const assign = project.members.find(item => {
+                        return item.user.toString() === assignedTo;
+                    });
+                    
+                    if (!assign) {
+                        return res.status(400).json({ message: 'Assigned user is not a project member' });
+                    }
+                    task.assignedTo = assignedTo;
                 }
-                
-                task.assignedTo = assignedTo;
             }
 
-            if (dueDate) {
-                task.dueDate = dueDate;
+            if (dueDate !== undefined) {
+                task.dueDate = dueDate === null ? undefined : dueDate;
             }
 
         }
