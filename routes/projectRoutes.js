@@ -1,7 +1,7 @@
 const express = require('express');
 const { createProject, getMyProjects, getProjectById, 
     updateProject, deleteProject, addMember, removeMember } = require('../controllers/projectController');
-const { createTask, getTask } = require('../controllers/taskController');
+const { createTask, getMyTask } = require('../controllers/taskController');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
@@ -14,6 +14,6 @@ router.delete('/:id', protect, deleteProject);
 router.post('/:id/members', protect, addMember);
 router.delete('/:id/members/:userId', protect, removeMember);
 router.post('/:id/tasks', protect, createTask);
-router.get('/:id/tasks', protect, getTask);
+router.get('/:id/tasks', protect, getMyTask);
 
 module.exports = router;

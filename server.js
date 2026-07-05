@@ -21,10 +21,6 @@ app.use('/api/auth', authRouter);
 app.use('/api/projects', projectRouter);
 app.use('/api/tasks', taskRouter);
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the Home Page!');
-});
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
