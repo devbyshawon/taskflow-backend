@@ -145,9 +145,9 @@ const updateTask = async (req, res) => {
         }
 
         await task.save();
-
-        res.status(200).json(task);
-
+        const populatedTask = await Task.findById(task._id).populate('assignedTo', 'name email');
+        res.status(200).json(populatedTask);
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error'});

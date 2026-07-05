@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Project = require('../models/Project');
 const User = require('../models/User');
+const Task = require('../models/Task');
 
 const createProject = async (req, res) => {
     try {
@@ -206,8 +207,14 @@ const removeMember = async (req, res) => {
         });
 
         await project.save();
+
+        await Task.updateMany(
+            { project: req.params.id, assignedTo: userId },
+            { $unset: { assignedTo: '' } }
+        );
+
         const updatedProject = await Project.findById(project._id).populate('members.user', 'name email');
-        res.status(200).json(updateProject);
+        res.status(200).json(updatedProject);
 
     } catch (error) {
         console.error(error);
