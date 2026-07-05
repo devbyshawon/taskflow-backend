@@ -66,6 +66,10 @@ const getProjectById = async (req, res) => {
 }
 
 const updateProject = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
     try {
         const project = await Project.findById(req.params.id);
 
@@ -103,6 +107,10 @@ const updateProject = async (req, res) => {
 }
 
 const deleteProject = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
     try {
         const project = await Project.findById(req.params.id);
 
@@ -129,6 +137,10 @@ const deleteProject = async (req, res) => {
 }
 
 const addMember = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
     try {
         const project = await Project.findById(req.params.id);
 
@@ -173,6 +185,14 @@ const addMember = async (req, res) => {
 }
 
 const removeMember = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
+        return res.status(404).json({ message: 'Member not found' });
+    }
+
     try {
         const project = await Project.findById(req.params.id);
 

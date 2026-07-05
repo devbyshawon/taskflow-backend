@@ -3,6 +3,10 @@ const Task = require('../models/Task');
 const Project = require('../models/Project');
 
 const createTask = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Project not found' });
+    }
+
     try {
         const project = await Project.findById(req.params.id);
 
@@ -48,7 +52,7 @@ const createTask = async (req, res) => {
 
 }
 
-const getMyTask = async (req, res) => {
+const getMyTasks = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         return res.status(404).json({ message: 'Project not found' });
     }
@@ -80,6 +84,10 @@ const getMyTask = async (req, res) => {
 } 
 
 const updateTask = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Task not found' });
+    }
+
     try {
         const task = await Task.findById(req.params.id);
 
@@ -117,6 +125,14 @@ const updateTask = async (req, res) => {
             }
 
             if (assignedTo) {
+                const assign = project.members.find(item => {
+                    return item.user.toString() === assignedTo;
+                });
+
+                if (!assign) {
+                    return res.status(400).json({ message: 'Assigned user is not a project member' });
+                }
+                
                 task.assignedTo = assignedTo;
             }
 
@@ -155,6 +171,10 @@ const updateTask = async (req, res) => {
 }
 
 const deleteTask = async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(404).json({ message: 'Task not found' });
+    }
+
     try {
         const task = await Task.findById(req.params.id);
 
@@ -190,4 +210,4 @@ const deleteTask = async (req, res) => {
     }
 }
 
-module.exports = { createTask, getMyTask, updateTask, deleteTask };
+module.exports = { createTask, getMyTasks, updateTask, deleteTask };

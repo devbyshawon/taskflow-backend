@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const protect = async (req, res, next) => {
     const token = req.headers.authorization;
 
-    if (!token || !token.startsWith('Bearer')) {
+    if (!token || !token.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'No token, authorization denied'});   
     }
 
