@@ -15,7 +15,13 @@ connectDB();
 const port = process.env.PORT || 5001;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://taskflow-shawon.vercel.app'
+  ],
+  credentials: true
+}));
 
 app.use('/api/auth', authRouter);
 app.use('/api/projects', projectRouter);
