@@ -207,3 +207,6 @@ This API is deployed on **Render** (free tier).
 **MD. Shawon Hossain (Arham)**  
 Final-year CSE Student, BRAC University  
 [GitHub](https://github.com/devbyshawon) · [LinkedIn](https://linkedin.com/in/devbyshawon-)
+
+## License
+MIT — see [LICENSE](./LICENSE)
